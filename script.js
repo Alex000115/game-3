@@ -1,44 +1,29 @@
-/**
- * Sholo Guti - Perfect Authentic Layout & Logic
- * Developer: NAZRUL
- */
-
 const svg = document.getElementById('game-board');
 const statusText = document.getElementById('status');
 const p1ScoreEl = document.getElementById('p1-score');
 const p2ScoreEl = document.getElementById('p2-score');
 
-let turn = 1; 
-let selectedNode = null;
-let p1Captured = 0, p2Captured = 0;
-let nodes = [];
-let connections = new Set();
+let turn = 1, selectedNode = null;
+let p1Captured = 0, p2Captured = 0, gameActive = true;
+let nodes = [], connections = new Set();
 
-// ১. বোর্ডের পয়েন্ট এবং লাইন তৈরি (Authentic Shape)
 function setupBoard() {
-    nodes = [];
-    connections.clear();
-
-    // গ্রিড পয়েন্ট তৈরি (5x5 center)
-    for (let row = 0; row < 5; row++) {
-        for (let col = 0; col < 5; col++) {
-            nodes.push({ x: 80 + col * 60, y: 160 + row * 60, row: row + 2, col: col });
+    nodes = []; connections.clear();
+    // ৫x৫ মেইন গ্রিড তৈরি
+    for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+            nodes.push({ x: 80 + c * 60, y: 130 + r * 60, r: r, c: c });
         }
     }
-    // উপরের ত্রিভুজ (Top Triangle)
-    nodes.push({ x: 200, y: 40, row: 0, col: 2 });
-    nodes.push({ x: 140, y: 100, row: 1, col: 1 }, { x: 200, y: 100, row: 1, col: 2 }, { x: 260, y: 100, row: 1, col: 3 });
-
-    // নিচের ত্রিভুজ (Bottom Triangle)
-    nodes.push({ x: 200, y: 520, row: 8, col: 2 });
-    nodes.push({ x: 140, y: 460, row: 7, col: 1 }, { x: 200, y: 460, row: 7, col: 2 }, { x: 260, y: 460, row: 7, col: 3 });
-
-    // কানেকশন লজিক (প্রতিটি পয়েন্টের সাথে পাশের পয়েন্টের লাইন)
+    // সব কানেকশন (Horizontal, Vertical, All Diagonals)
     nodes.forEach((n1, i) => {
         nodes.forEach((n2, j) => {
             if (i >= j) return;
-            const dist = Math.hypot(n1.x - n2.x, n1.y - n2.y);
-            if (dist < 86) connections.add(`${i}-${j}`);
+            const dr = Math.abs(n1.r - n2.r), dc = Math.abs(n1.c - n2.c);
+            if ((dr <= 1 && dc <= 1) && (dr + dc > 0)) {
+                // শোলগুটির মেইন গ্রিডে সব পয়েন্টে কোণাকুণি চাল দেওয়া যায়
+                connections.add(`${i}-${j}`);
+            }
         });
     });
 }
@@ -47,20 +32,16 @@ function initGame(mode) {
     document.getElementById('menu').classList.add('hidden');
     document.getElementById('game-container').classList.remove('hidden');
     setupBoard();
-    
-    // শুরুতে গুটি বসানো
-    nodes.forEach((node, i) => {
-        if (node.row < 4) node.bead = 2; // Enemy
-        else if (node.row > 4) node.bead = 1; // Player
-        else node.bead = null;
+    nodes.forEach((n, i) => {
+        if (i < 10) n.bead = 2; // Dark pieces
+        else if (i > 14) n.bead = 1; // Red pieces
+        else n.bead = null;
     });
-    
     render();
 }
 
 function render() {
     svg.innerHTML = '';
-    // লাইন আঁকা
     connections.forEach(pair => {
         const [i, j] = pair.split('-').map(Number);
         const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -76,59 +57,54 @@ function render() {
             b.setAttribute("cx", node.x); b.setAttribute("cy", node.y); b.setAttribute("r", 18);
             b.classList.add("bead", node.bead === 1 ? "player1" : "player2");
             if (selectedNode === node) b.classList.add("selected");
-            b.onclick = () => { if(node.bead === turn) selectedNode = node; render(); };
+            b.onclick = () => { if(node.bead === turn) { selectedNode = node; render(); } };
             svg.appendChild(b);
         } else if (selectedNode) {
-            const move = checkMove(selectedNode, node);
+            const move = getMove(selectedNode, node);
             if (move.valid) {
                 const hint = document.createElementNS("http://www.w3.org/2000/svg", "circle");
                 hint.setAttribute("cx", node.x); hint.setAttribute("cy", node.y);
-                hint.setAttribute("r", 10); hint.classList.add("move-hint");
-                hint.onclick = () => performMove(selectedNode, node, move.captured);
+                hint.setAttribute("r", 12); hint.classList.add("move-hint");
+                hint.onclick = () => performMove(selectedNode, node, move.cap);
                 svg.appendChild(hint);
             }
         }
     });
 }
 
-function checkMove(start, end) {
-    const startIdx = nodes.indexOf(start);
-    const endIdx = nodes.indexOf(end);
-
-    // ১. সাধারণ চাল (Adjacent move)
-    if (connections.has(`${Math.min(startIdx, endIdx)}-${Math.max(startIdx, endIdx)}`)) {
-        return { valid: true, captured: null };
-    }
-
-    // ২. গুটি খাওয়া (Capture Logic)
-    // মাঝখানের পয়েন্ট বের করা
-    const midX = (start.x + end.x) / 2;
-    const midY = (start.y + end.y) / 2;
-    const midNode = nodes.find(n => Math.abs(n.x - midX) < 5 && Math.abs(n.y - midY) < 5);
-
-    if (midNode && midNode.bead && midNode.bead !== turn) {
-        const midIdx = nodes.indexOf(midNode);
-        const p1 = `${Math.min(startIdx, midIdx)}-${Math.max(startIdx, midIdx)}`;
-        const p2 = `${Math.min(midIdx, endIdx)}-${Math.max(midIdx, endIdx)}`;
-        
-        if (connections.has(p1) && connections.has(p2)) {
-            return { valid: true, captured: midNode };
+function getMove(s, e) {
+    const si = nodes.indexOf(s), ei = nodes.indexOf(e);
+    // সাধারণ চাল
+    if (connections.has(`${Math.min(si, ei)}-${Math.max(si, ei)}`)) return { valid: true, cap: null };
+    
+    // ক্যাপচার লজিক (মাঝখানের গুটি খাওয়া)
+    const midR = (s.r + e.r) / 2, midC = (s.c + e.c) / 2;
+    if (Number.isInteger(midR) && Number.isInteger(midC)) {
+        const mid = nodes.find(n => n.r === midR && n.c === midC);
+        if (mid && mid.bead && mid.bead !== turn) {
+            const mi = nodes.indexOf(mid);
+            if (connections.has(`${Math.min(si, mi)}-${Math.max(si, mi)}`) && 
+                connections.has(`${Math.min(mi, ei)}-${Math.max(mi, ei)}`)) {
+                return { valid: true, cap: mid };
+            }
         }
     }
     return { valid: false };
 }
 
-function performMove(start, end, captured) {
-    end.bead = start.bead;
-    start.bead = null;
-    if (captured) {
-        captured.bead = null;
+function performMove(s, e, cap) {
+    e.bead = s.bead; s.bead = null;
+    if (cap) {
+        cap.bead = null;
         if (turn === 1) p1Captured++; else p2Captured++;
-        p1ScoreEl.innerText = p1Captured;
-        p2ScoreEl.innerText = p2Captured;
+        p1ScoreEl.innerText = p1Captured; p2ScoreEl.innerText = p2Captured;
     }
     selectedNode = null;
     turn = turn === 1 ? 2 : 1;
     statusText.innerText = `Player ${turn}'s Turn`;
     render();
+    if (p1Captured === 10 || p2Captured === 10) {
+        alert(p1Captured === 10 ? "NAZRUL Wins!" : "Player 2 Wins!");
+        location.reload();
+    }
 }
