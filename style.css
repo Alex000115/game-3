@@ -1,0 +1,45 @@
+:root {
+    --bg: #1a1a1a;
+    --board-line: #e2b07e;
+    --p1-color: #ff4757;
+    --p2-color: #2f3542;
+    --highlight: #2ed573;
+}
+
+body {
+    background-color: var(--bg);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+.container { text-align: center; width: 100%; max-width: 500px; padding: 20px; }
+
+.board-wrapper {
+    background: #573312;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 20px auto;
+}
+
+svg { width: 100%; height: auto; cursor: pointer; }
+
+.line { stroke: var(--board-line); stroke-width: 3; }
+.node { fill: #3d2b1f; stroke: var(--board-line); stroke-width: 1; }
+
+.bead { cursor: pointer; transition: transform 0.2s; stroke: white; stroke-width: 0.5; }
+.bead.player1 { fill: var(--p1-color); }
+.bead.player2 { fill: var(--p2-color); }
+.bead.selected { stroke: var(--highlight); stroke-width: 4; }
+
+.move-hint { fill: var(--highlight); opacity: 0.6; cursor: pointer; }
+
+.hidden { display: none; }
+.game-info { display: flex; justify-content: space-around; margin-bottom: 10px; }
+button { padding: 10px 20px; cursor: pointer; background: var(--board-line); border: none; font-weight: bold; border-radius: 4px; }
+
+footer a { color: var(--board-line); text-decoration: none; }
