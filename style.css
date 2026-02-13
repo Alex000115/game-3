@@ -4,42 +4,58 @@
     --p1-color: #ff4757;
     --p2-color: #2f3542;
     --highlight: #2ed573;
+    --text: #ffffff;
 }
 
 body {
     background-color: var(--bg);
-    color: white;
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container { text-align: center; width: 100%; max-width: 500px; padding: 20px; }
 
 .board-wrapper {
-    background: #573312;
-    padding: 10px;
-    border-radius: 8px;
+    background: #3d2b1f;
+    padding: 15px;
+    border-radius: 12px;
     margin: 20px auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 svg { width: 100%; height: auto; cursor: pointer; }
 
-.line { stroke: var(--board-line); stroke-width: 3; }
-.node { fill: #3d2b1f; stroke: var(--board-line); stroke-width: 1; }
+.line { stroke: var(--board-line); stroke-width: 3; stroke-linecap: round; }
+.node { fill: #2a1d15; stroke: var(--board-line); stroke-width: 1; }
 
-.bead { cursor: pointer; transition: transform 0.2s; stroke: white; stroke-width: 0.5; }
+.bead { cursor: pointer; transition: transform 0.2s ease; stroke: rgba(255,255,255,0.3); stroke-width: 1; }
+.bead:hover { transform: scale(1.1); }
 .bead.player1 { fill: var(--p1-color); }
 .bead.player2 { fill: var(--p2-color); }
 .bead.selected { stroke: var(--highlight); stroke-width: 4; }
 
-.move-hint { fill: var(--highlight); opacity: 0.6; cursor: pointer; }
+.move-hint { fill: var(--highlight); opacity: 0.5; cursor: pointer; transition: opacity 0.2s; }
+.move-hint:hover { opacity: 0.8; }
 
 .hidden { display: none; }
-.game-info { display: flex; justify-content: space-around; margin-bottom: 10px; }
-button { padding: 10px 20px; cursor: pointer; background: var(--board-line); border: none; font-weight: bold; border-radius: 4px; }
+.game-info { display: flex; justify-content: space-around; margin-bottom: 15px; font-weight: bold; }
+.score { background: #2f3542; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; }
 
+button { 
+    padding: 12px 25px; 
+    cursor: pointer; 
+    background: var(--board-line); 
+    border: none; 
+    font-weight: bold; 
+    border-radius: 6px;
+    transition: filter 0.2s;
+}
+button:hover { filter: brightness(1.1); }
+
+footer { margin-top: 20px; font-size: 0.85rem; opacity: 0.8; }
 footer a { color: var(--board-line); text-decoration: none; }
