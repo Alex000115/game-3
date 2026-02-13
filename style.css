@@ -24,23 +24,32 @@ body {
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-    margin: 10px;
 }
 
 svg { width: 100%; height: auto; display: block; }
 
-.line { stroke: var(--lines); stroke-width: 3; stroke-linecap: round; }
+.line { stroke: var(--lines); stroke-width: 3; stroke-linecap: round; fill: none; }
 
-.bead { cursor: pointer; stroke: rgba(255,255,255,0.2); stroke-width: 1; }
+/* REMOVED ALL TRANSITIONS TO STOP VIBRATION */
+.bead { 
+    cursor: pointer; 
+    stroke: rgba(255,255,255,0.2); 
+    stroke-width: 1;
+}
+
 .bead.player1 { fill: var(--p1); }
 .bead.player2 { fill: var(--p2); stroke: #444; }
-.bead.selected { stroke: #00e676; stroke-width: 6; }
+
+/* Highlight without scaling to prevent shaking */
+.bead.selected { 
+    stroke: #00e676; 
+    stroke-width: 6; 
+}
 
 .move-hint { fill: #00e676; opacity: 0.6; cursor: pointer; }
 
-.hidden { display: none; }
 .game-info { display: flex; justify-content: space-around; margin-bottom: 15px; }
-.score { padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); }
+.score { padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
 .score.p1 { background: var(--p1); }
 .score.p2 { background: #333; }
 
