@@ -3,31 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sholo Guti - Pro</title>
+    <title>Sholo Guti - Pro Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Sholo Guti</h1>
-            <div id="status">Select Mode</div>
+            <div id="status">Player 1's Turn</div>
         </header>
 
-        <div id="menu" class="overlay">
-            <div class="menu-content">
-                <button class="menu-btn" onclick="initGame('pvp')">Local Multiplayer</button>
-                <button class="menu-btn" onclick="initGame('pve')">Vs Computer</button>
-            </div>
-        </div>
-
-        <main id="game-container" class="hidden">
+        <main id="game-container">
             <div class="game-info">
                 <div class="score p1">Red: <span id="p1-score">0</span></div>
                 <div class="score p2">Dark: <span id="p2-score">0</span></div>
             </div>
             
             <div class="board-wrapper">
-                <svg id="game-board" viewBox="0 0 400 500"></svg>
+                <svg id="game-board" viewBox="0 0 400 600"></svg>
             </div>
 
             <button class="restart-btn" onclick="location.reload()">Restart Game</button>
