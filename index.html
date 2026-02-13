@@ -3,36 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sholo Guti - Pro Edition</title>
+    <title>Sholo Guti - Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Sholo Guti</h1>
-            <div id="status">Select Game Mode</div>
+            <div id="status">Select Mode</div>
         </header>
 
         <div id="menu" class="overlay">
             <div class="menu-content">
-                <button class="menu-btn" onclick="initGame('pvp')">Two Players (Local)</button>
-                <button class="menu-btn" onclick="initGame('pve')">Player vs Computer</button>
+                <button class="menu-btn" onclick="initGame('pvp')">Local Multiplayer</button>
+                <button class="menu-btn" onclick="initGame('pve')">Vs Computer</button>
             </div>
         </div>
 
         <main id="game-container" class="hidden">
             <div class="game-info">
-                <div class="score p1">Player 1: <span id="p1-score">0</span></div>
-                <div class="score p2">Player 2: <span id="p2-score">0</span></div>
+                <div class="score p1">Red: <span id="p1-score">0</span></div>
+                <div class="score p2">Dark: <span id="p2-score">0</span></div>
             </div>
             
             <div class="board-wrapper">
-                <svg id="game-board" viewBox="0 0 400 560"></svg>
+                <svg id="game-board" viewBox="0 0 400 500"></svg>
             </div>
 
-            <div class="controls">
-                <button onclick="location.reload()">Reset Game</button>
-            </div>
+            <button class="restart-btn" onclick="location.reload()">Restart Game</button>
         </main>
 
         <footer>
