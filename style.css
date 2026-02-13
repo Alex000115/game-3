@@ -1,10 +1,9 @@
 :root {
-    --bg: #121212;
-    --board-wood: #5d4037;
-    --line-color: #ffd54f;
-    --p1-color: #ff1744;
-    --p2-color: #212121;
-    --hint-color: #00e676;
+    --bg: #1a1a1a;
+    --board: #4e342e;
+    --lines: #ffd54f;
+    --red: #ff1744;
+    --dark: #212121;
 }
 
 body {
@@ -18,33 +17,33 @@ body {
     font-family: sans-serif;
 }
 
-.container { text-align: center; width: 100%; max-width: 450px; padding: 10px; }
+.container { text-align: center; width: 100%; max-width: 450px; }
 
 .board-wrapper {
-    background: var(--board-wood);
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    background: var(--board);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 svg { width: 100%; height: auto; }
 
-.line { stroke: var(--line-color); stroke-width: 3; stroke-linecap: round; }
-.node-point { fill: var(--line-color); opacity: 0.3; }
+.line { stroke: var(--lines); stroke-width: 3; stroke-linecap: round; }
 
-.bead { cursor: pointer; stroke: white; stroke-width: 1; transition: 0.2s; }
-.bead.player1 { fill: var(--p1-color); }
-.bead.player2 { fill: var(--p2-color); stroke: #444; }
-.bead.selected { stroke: var(--hint-color); stroke-width: 5; }
+/* গুটি নড়া বন্ধ করতে transition বাদ দেওয়া হয়েছে */
+.bead { cursor: pointer; stroke: rgba(255,255,255,0.2); stroke-width: 1; }
+.bead.player1 { fill: var(--red); }
+.bead.player2 { fill: var(--dark); stroke: #444; }
+.bead.selected { stroke: #00e676; stroke-width: 5; }
 
-.move-hint { fill: var(--hint-color); opacity: 0.6; cursor: pointer; }
+.move-hint { fill: #00e676; opacity: 0.6; cursor: pointer; }
 
 .hidden { display: none; }
-.game-info { display: flex; justify-content: space-around; margin-bottom: 15px; }
-.score { padding: 8px 15px; border-radius: 5px; font-weight: bold; }
-.score.p1 { background: var(--p1-color); }
+.game-info { display: flex; justify-content: space-around; margin-bottom: 10px; }
+.score { padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
+.score.p1 { background: var(--red); }
 .score.p2 { background: #333; }
 
-button { padding: 12px 25px; cursor: pointer; background: #ffd54f; border: none; font-weight: bold; border-radius: 5px; }
-footer { margin-top: 20px; font-size: 0.8rem; }
-footer a { color: #ffd54f; text-decoration: none; }
+.restart-btn { margin-top: 15px; padding: 10px 20px; background: var(--lines); border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+footer { margin-top: 20px; font-size: 0.8rem; opacity: 0.7; }
+footer a { color: var(--lines); text-decoration: none; }
